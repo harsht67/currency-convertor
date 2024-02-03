@@ -9,8 +9,10 @@ export default function ConversionResult({from, to, amount, conversion}) {
                 <span>{to} {(amount * conversion).toLocaleString()}</span>
             </div>
 
-            <div>
-                1 USD = {conversion} INR | 1 INR = {(1/conversion).toFixed(4)} USD
+            <div className='convertor__comparision'>
+                <span>1 USD = {conversion} INR</span>
+                <span>|</span>
+                <span>1 INR = {(1/conversion).toFixed(4)} USD</span>
             </div>
 
         </section>

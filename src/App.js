@@ -7,9 +7,11 @@ function App() {
     <div className="App">
       <Header />
 
-      <h1 className="App__title">Ht Currency Convertor</h1>
+      <main>
+        <h1 className="App__title">Ht Currency Convertor</h1>
 
-      <Convertor />
+        <Convertor />
+      </main>
     </div>
   );
 }
