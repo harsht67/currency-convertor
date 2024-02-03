@@ -1,0 +1,10 @@
+.header {
+    padding: 1rem;
+    /* border-block-end: 1px solid #000; */
+    background-color: #fff;
+}
+
+.header__logo {
+    margin: 0;
+}
+
