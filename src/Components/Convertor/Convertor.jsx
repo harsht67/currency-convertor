@@ -3,6 +3,11 @@ import "./Convertor.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ConversionResult from "../Result/ConversionResult";
+import CurrencyInput from "../CurrencyInput/CurrencyInput";
+import AmountInput from "../AmountInput/AmountInput";
+
+const RAPID_API_KEY = process.env.REACT_APP_RAPID_API_KEY;
+const RAPID_API_URL = process.env.REACT_APP_RAPID_API_URL;
 
 export default function Convertor() {
     const [currency, setCurrency] = useState([]);
@@ -18,9 +23,8 @@ export default function Convertor() {
                 method: "GET",
                 url: "https://currency-exchange.p.rapidapi.com/listquotes",
                 headers: {
-                    "X-RapidAPI-Key":
-                        "6fc01cf93fmsh8ce7fac572c1e77p112105jsn04f92dc6d157",
-                    "X-RapidAPI-Host": "currency-exchange.p.rapidapi.com",
+                    "X-RapidAPI-Key": RAPID_API_KEY,
+                    "X-RapidAPI-Host": RAPID_API_URL,
                 },
             };
 
@@ -42,7 +46,6 @@ export default function Convertor() {
         if (!isNaN(input)) {
             if (amount.length === 1 && amount === "0") {
                 // to avoid 035
-                console.log("here");
                 setAmount(input.substr(1));
             } else {
                 setAmount(input);
@@ -50,13 +53,13 @@ export default function Convertor() {
         }
     };
 
-    const changeFrom = (event) => {
-        setFrom(event.target.value);
+    const changeFrom = ({target}) => {
+        setFrom(target.value);
         setIsResult(false);
     };
 
-    const changeTo = (event) => {
-        setTo(event.target.value);
+    const changeTo = ({target}) => {
+        setTo(target.value);
         setIsResult(false);
     };
 
@@ -71,8 +74,8 @@ export default function Convertor() {
                 q: amount,
             },
             headers: {
-                "X-RapidAPI-Key": "6fc01cf93fmsh8ce7fac572c1e77p112105jsn04f92dc6d157",
-                "X-RapidAPI-Host": "currency-exchange.p.rapidapi.com",
+                "X-RapidAPI-Key": RAPID_API_KEY,
+                "X-RapidAPI-Host": RAPID_API_URL,
             },
         };
 
@@ -89,37 +92,13 @@ export default function Convertor() {
     return (
         <article className="convertor">
             <section className="convertor__main">
-                <label>
-                    <span>Amount</span>
-                    <input onChange={changeAmount} value={amount} />
-                    {amount === "" && (
-                        <span className="error">Please enter a valid amount</span>
-                    )}
-                </label>
+                
+                <AmountInput label="Amount" value={amount} onChange={changeAmount} />
 
-                <label>
-                    <span>From</span>
-                    <select value={from} onChange={changeFrom}>
-                        {/* <option>Select currency</option> */}
-                        {currency.map((currency, index) => (
-                            <option key={currency + index} value={currency}>
-                                {currency}
-                            </option>
-                        ))}
-                    </select>
-                </label>
+                <CurrencyInput label="From" value={from} onChange={changeFrom} options={currency} />
 
-                <label>
-                    <span>To</span>
-                    <select value={to} onChange={changeTo}>
-                        {/* <option>Select currency</option> */}
-                        {currency.map((currency, index) => (
-                            <option key={currency + index} value={currency}>
-                                {currency}
-                            </option>
-                        ))}
-                    </select>
-                </label>
+                <CurrencyInput label="To" value={to} onChange={changeTo} options={currency} />
+
             </section>
 
             <section className="convertor__footer">
