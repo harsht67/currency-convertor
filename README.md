@@ -3,6 +3,3 @@
 # Stack 
 - ReactJS
 - CSS 
-
-# Features
-- Responsive design 
