@@ -2,14 +2,16 @@ import "./Convertor.css";
 
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
+import ConversionResult from "../Result/ConversionResult";
 
 export default function Convertor() {
 
     const [currency, setCurrency] = useState([]);
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState('0');
     const [from, setFrom] = useState('USD');
     const [to, setTo] = useState('INR');
-    const [result, setResult] = useState(0);
+    const [conversion, setConversion] = useState(0);
+    const [isResult, setIsResult] = useState(false);
 
     useEffect(() => {
 
@@ -36,39 +38,54 @@ export default function Convertor() {
     }, []);
 
     const changeAmount = (event) => {
-        setAmount(event.target.value);
+        let input = event.target.value;
+
+        if (!isNaN(input)) {
+
+            if (amount.length === 1 && amount === '0') { // to avoid 035
+                console.log("here")
+                setAmount(input.substr(1));
+            }
+            else {
+                setAmount(input);
+            }
+        }
     }
 
     const changeFrom = (event) => {
         setFrom(event.target.value);
+        setIsResult(false);
     }
 
     const changeTo = (event) => {
         setTo(event.target.value);
+        setIsResult(false);
     }
 
     const convert = async () => {
+        console.log(amount);
         const options = {
             method: 'GET',
             url: 'https://currency-exchange.p.rapidapi.com/exchange',
             params: {
-              to,
-              from,
-              q: amount
+                to,
+                from,
+                q: amount
             },
             headers: {
-              'X-RapidAPI-Key': '6fc01cf93fmsh8ce7fac572c1e77p112105jsn04f92dc6d157',
-              'X-RapidAPI-Host': 'currency-exchange.p.rapidapi.com'
+                'X-RapidAPI-Key': '6fc01cf93fmsh8ce7fac572c1e77p112105jsn04f92dc6d157',
+                'X-RapidAPI-Host': 'currency-exchange.p.rapidapi.com'
             }
-          };
-          
-          try {
-              const response = await axios.request(options);
-              console.log(response.data);
-              setResult(response.data);
-          } catch (error) {
-              console.error(error);
-          }
+        };
+
+        try {
+            const response = await axios.request(options);
+            console.log(response.data);
+            setConversion(response.data);
+            setIsResult(true);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -79,6 +96,12 @@ export default function Convertor() {
                 <label>
                     Amount
                     <input onChange={changeAmount} value={amount} />
+                    {
+                        amount === '' &&
+                        <span className="error">
+                            Please enter a valid amount
+                        </span>
+                    }
                 </label>
 
                 <label>
@@ -87,7 +110,7 @@ export default function Convertor() {
                         {/* <option>Select currency</option> */}
                         {
                             currency.map((currency, index) => (
-                                <option key={currency+index} value={currency}>
+                                <option key={currency + index} value={currency}>
                                     {currency}
                                 </option>
                             ))
@@ -101,7 +124,7 @@ export default function Convertor() {
                         {/* <option>Select currency</option> */}
                         {
                             currency.map((currency, index) => (
-                                <option key={currency+index} value={currency}>
+                                <option key={currency + index} value={currency}>
                                     {currency}
                                 </option>
                             ))
@@ -112,23 +135,15 @@ export default function Convertor() {
             </section>
 
             <section className='convertor__footer'>
+                {
+                    isResult
+                        ? <ConversionResult from={from} to={to} amount={amount} conversion={conversion} />
+                        :
 
-                <section className='convertor__conversion'>
-
-                    <div className='convertor__result'>
-                        <span>{from} {amount} =</span>
-                        <span>{to} {result}</span>
-                    </div>
-
-                    <div>
-                        1 USD = 82.2999 INR | 1 INR = 0.012 USD
-                    </div>
-
-                </section>
-
-                <button className='convertor__btn' onClick={convert}>
-                    Convert
-                </button>
+                        <button className='convertor__btn' onClick={convert}>
+                            Convert
+                        </button>
+                }
 
             </section>
 
