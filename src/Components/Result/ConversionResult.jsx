@@ -12,9 +12,9 @@ export default function ConversionResult({from, to, amount, conversion}) {
             </div>
 
             <div className='conversionResult__comparision'>
-                <span>1 USD = {conversion} INR</span>
+                <span>1 {from} = {(conversion).toFixed(4)} {to}</span>
                 <span>|</span>
-                <span>1 INR = {(1/conversion).toFixed(4)} USD</span>
+                <span>1 {to} = {(1/conversion).toFixed(4)} {from}</span>
             </div>
 
         </section>
